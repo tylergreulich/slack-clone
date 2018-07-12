@@ -1,6 +1,9 @@
 import Sequelize from 'sequelize';
 const sequelize = new Sequelize('slack', 'root', 'password', {
-  dialect: 'mysql'
+  dialect: 'mysql',
+  define: {
+    underscored: true
+  }
 });
 const models = {
   User: sequelize.import('./user'),
