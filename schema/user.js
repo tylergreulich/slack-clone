@@ -12,6 +12,6 @@ export default `
   }
 
   type Mutation {
-    register(username: String!, email: String!, password: String!): User!
+    registerUser(username: String!, email: String!, password: String!): Boolean!
   }
 `;

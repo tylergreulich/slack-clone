@@ -2,7 +2,7 @@ import * as React from 'react';
 import { graphql, ChildDataProps } from 'react-apollo';
 import gql from 'graphql-tag';
 
-interface Data {
+interface QueryData {
   data?: {
     getAllUsers: Array<{ id: number; email: string }>;
     loading: boolean;
@@ -14,7 +14,7 @@ interface User {
   email: string;
 }
 
-class Home extends React.Component<ChildDataProps<Data>> {
+class Home extends React.Component<ChildDataProps<QueryData>> {
   public render() {
     const {
       data,
@@ -22,18 +22,18 @@ class Home extends React.Component<ChildDataProps<Data>> {
     } = this.props;
 
     return (
-      <div>
+      <>
         {loading
           ? null
           : getAllUsers.map((user: User) => (
               <h1 key={user.id}>{user.email}</h1>
             ))}
-      </div>
+      </>
     );
   }
 }
 
-const getAllUsers = gql`
+const getAllUsersQuery = gql`
   {
     getAllUsers {
       id
@@ -42,4 +42,4 @@ const getAllUsers = gql`
   }
 `;
 
-export default graphql(getAllUsers)(Home);
+export default graphql(getAllUsersQuery)(Home);
