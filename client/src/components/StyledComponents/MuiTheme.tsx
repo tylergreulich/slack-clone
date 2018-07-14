@@ -22,6 +22,9 @@ const theme = createMuiTheme({
         '&$focused': {
           color: 'rgba(99, 193, 160, 0.7)'
         }
+      },
+      error: {
+        fontSize: '1.2rem'
       }
     },
     MuiInput: {

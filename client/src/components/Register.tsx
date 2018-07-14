@@ -13,7 +13,10 @@ import {
 import { normalizeErrors } from '../utils/normalizeErrors';
 import { NormalizedErrorMap } from '../types/normalizedErrorMap';
 
-interface Props {
+import { RouteComponentProps } from 'react-router-dom';
+import { isNullOrUndefined } from 'util';
+
+interface RegisterProps extends RouteComponentProps<any> {
   children: (
     data: {
       submit: (
@@ -23,19 +26,34 @@ interface Props {
   ) => JSX.Element | null;
 }
 
+interface Props {
+  variant: string;
+  color: string;
+}
+
 interface State {
   username: string;
+  usernameError: string;
   email: string;
+  emailError: string;
   password: string;
+  passwordError: string;
 }
 
 class Register extends React.Component<
-  ChildMutateProps<Props, RegisterMutation, RegisterMutationVariables>
+  ChildMutateProps<
+    RegisterProps & Props,
+    RegisterMutation,
+    RegisterMutationVariables
+  >
 > {
   public state = {
     username: '',
+    usernameError: '',
     email: '',
-    password: ''
+    emailError: '',
+    password: '',
+    passwordError: ''
   };
 
   public onChangeHandler = (event: React.FormEvent<HTMLInputElement>) => {
@@ -43,16 +61,42 @@ class Register extends React.Component<
     this.setState({ [name]: value });
   };
 
-  public onSubmitHandler = () => {
-    this.props
-      .mutate({
-        variables: this.state
-      })
-      .then((res: any) => console.log(res));
+  public onSubmitHandler = async () => {
+    this.setState({
+      usernameError: '',
+      emailError: '',
+      passwordError: ''
+    });
+
+    const { username, email, password } = this.state;
+    const response = await this.props.mutate({
+      variables: { username, email, password }
+    });
+
+    const { ok, errors }: any = response.data.register;
+
+    if (ok) {
+      this.props.history.push('/login');
+    } else {
+      const err = {};
+      errors.forEach(({ path, message }: any) => {
+        err[`${path}Error`] = message;
+      });
+      this.setState(err);
+    }
+
+    console.log(response);
   };
 
   public render() {
-    const { username, email, password } = this.state;
+    const {
+      username,
+      email,
+      password,
+      usernameError,
+      emailError,
+      passwordError
+    } = this.state;
 
     return (
       <>
@@ -61,22 +105,26 @@ class Register extends React.Component<
             <Typography variant="display2">Register</Typography>
             <RegisterInput
               changed={this.onChangeHandler}
-              placeholder="Username"
               value={username}
               name="username"
+              error={!!usernameError}
+              label={usernameError ? usernameError : 'Username'}
+              style={{ display: 'flex', flexWrap: 'wrap' }}
             />
             <RegisterInput
               changed={this.onChangeHandler}
-              placeholder="Email"
               value={email}
               name="email"
+              error={!!emailError}
+              label={emailError ? emailError : 'Email'}
             />
             <RegisterInput
               changed={this.onChangeHandler}
-              placeholder="Password"
               type="password"
               value={password}
               name="password"
+              error={!!passwordError}
+              label={passwordError ? passwordError : 'Password'}
             />
             <RegisterButton
               onClick={this.onSubmitHandler}
@@ -94,10 +142,18 @@ class Register extends React.Component<
 
 const registerMutation = gql`
   mutation($username: String!, $email: String!, $password: String!) {
-    registerUser(username: $username, email: $email, password: $password)
+    register(username: $username, email: $email, password: $password) {
+      ok
+      errors {
+        path
+        message
+      }
+    }
   }
 `;
 
-export default graphql<Props, RegisterMutation, RegisterMutationVariables>(
-  registerMutation
-)(Register);
+export default graphql<
+  RegisterProps,
+  RegisterMutation,
+  RegisterMutationVariables
+>(registerMutation)(Register);

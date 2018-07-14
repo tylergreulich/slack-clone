@@ -1,6 +1,8 @@
 export interface RegisterMutationResponse {
   path: string;
   message: string;
+  ok: boolean;
+  errors: object;
 }
 
 export interface RegisterMutation {
