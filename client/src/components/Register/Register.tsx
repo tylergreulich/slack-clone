@@ -1,20 +1,24 @@
 import * as React from 'react';
 import { Typography } from '@material-ui/core';
-import { RegisterContainer, RegisterButton } from './StyledComponents/Register';
-import RegisterInput from './Register/RegisterInputs';
-import { ThemeWrapper } from '../components/StyledComponents/MuiTheme';
+import {
+  RegisterContainer,
+  RegisterForm,
+  RegisterButton
+} from '../StyledComponents/Register';
+import RegisterInput from './RegisterInput';
+import { ThemeWrapper } from '../StyledComponents/MuiTheme';
+import { TextField } from '@material-ui/core';
 
 import gql from 'graphql-tag';
 import { graphql, ChildMutateProps } from 'react-apollo';
 import {
   RegisterMutation,
   RegisterMutationVariables
-} from '../schema/schemaTypes';
-import { normalizeErrors } from '../utils/normalizeErrors';
-import { NormalizedErrorMap } from '../types/normalizedErrorMap';
+} from '../../schema/schemaTypes';
+import { normalizeErrors } from '../../utils/normalizeErrors';
+import { NormalizedErrorMap } from '../../types/normalizedErrorMap';
 
 import { RouteComponentProps } from 'react-router-dom';
-import { isNullOrUndefined } from 'util';
 
 interface RegisterProps extends RouteComponentProps<any> {
   children: (
@@ -76,7 +80,7 @@ class Register extends React.Component<
     const { ok, errors }: any = response.data.register;
 
     if (ok) {
-      this.props.history.push('/login');
+      this.props.history.push('/');
     } else {
       const err = {};
       errors.forEach(({ path, message }: any) => {
@@ -99,9 +103,9 @@ class Register extends React.Component<
     } = this.state;
 
     return (
-      <>
+      <RegisterContainer>
         <ThemeWrapper>
-          <RegisterContainer>
+          <RegisterForm>
             <Typography variant="display2">Register</Typography>
             <RegisterInput
               changed={this.onChangeHandler}
@@ -109,7 +113,6 @@ class Register extends React.Component<
               name="username"
               error={!!usernameError}
               label={usernameError ? usernameError : 'Username'}
-              style={{ display: 'flex', flexWrap: 'wrap' }}
             />
             <RegisterInput
               changed={this.onChangeHandler}
@@ -133,9 +136,9 @@ class Register extends React.Component<
             >
               Submit
             </RegisterButton>
-          </RegisterContainer>
+          </RegisterForm>
         </ThemeWrapper>
-      </>
+      </RegisterContainer>
     );
   }
 }

@@ -6,11 +6,11 @@ export default (sequelize, DataTypes) => {
       validate: {
         isAlphanumeric: {
           args: true,
-          msg: 'The username can only contain letters and numbers'
+          msg: 'Username can only have letters and numbers'
         },
         len: {
           args: [3, 25],
-          msg: 'The username must be between 3 and 25 characters'
+          msg: 'Username must be at least 3 characters'
         },
         notEmpty: {
           args: true,

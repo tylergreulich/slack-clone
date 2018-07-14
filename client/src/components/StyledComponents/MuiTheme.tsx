@@ -18,16 +18,19 @@ const theme = createMuiTheme({
     },
     MuiFormLabel: {
       root: {
-        fontSize: '1.7rem',
+        fontSize: '2rem',
         '&$focused': {
           color: 'rgba(99, 193, 160, 0.7)'
         }
       },
       error: {
-        fontSize: '1.2rem'
+        fontSize: '1.4rem'
       }
     },
     MuiInput: {
+      root: {
+        fontSize: '2rem'
+      },
       underline: {
         '&:after': {
           // underline color when textfield is inactive
@@ -36,6 +39,11 @@ const theme = createMuiTheme({
         '&:hover:not($disabled):not($focused):not($error):before': {
           borderBottom: '2px solid rgba(99, 193, 160, 0.7)'
         }
+      }
+    },
+    MuiTypography: {
+      display2: {
+        fontSize: '5rem'
       }
     }
   }

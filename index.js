@@ -10,6 +10,9 @@ import cors from 'cors';
 
 import models from './models/index';
 
+const SECRET = 'ijetiw94gjg9ho5eni';
+const SECRET2 = 'wpoeg40g5ojg503p4gomb';
+
 const typeDefs = mergeTypes(fileLoader(path.join(__dirname, './schema')));
 const resolvers = mergeResolvers(
   fileLoader(path.join(__dirname, './resolvers'))
@@ -34,7 +37,9 @@ app.use(
       models,
       user: {
         id: 1
-      }
+      },
+      SECRET,
+      SECRET2
     }
   })
 );

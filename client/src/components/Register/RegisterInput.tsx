@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { RegisterInput } from '../StyledComponents/Register';
+import { TextField } from '@material-ui/core';
 
 interface Props {
   id?: string;
@@ -18,12 +18,9 @@ interface Props {
 }
 
 export default (props: Props) => (
-  <RegisterInput
-    id="full-width"
+  <TextField
+    id="mui-theme-provider-input"
     label={props.label}
-    InputLabelProps={{
-      shrink: true
-    }}
     placeholder={props.placeholder}
     fullWidth={true}
     margin="normal"

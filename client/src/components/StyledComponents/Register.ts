@@ -1,15 +1,17 @@
 import styled from 'styled-components';
-import { TextField, Button } from '@material-ui/core';
+import { Button } from '@material-ui/core';
 
-export const RegisterContainer = styled.form`
+export const RegisterContainer = styled.div`
   display: flex;
-  flex-wrap: wrap;
-  width: 20rem;
-  margin: 0 auto;
+  align-items: center;
+  height: 100vh;
 `;
 
-export const RegisterInput = styled(TextField)`
-  width: 20rem;
+export const RegisterForm = styled.form`
+  display: flex;
+  flex-wrap: wrap;
+  width: 30rem;
+  margin: 0 auto;
 `;
 
 export const RegisterButton = styled(Button)`
