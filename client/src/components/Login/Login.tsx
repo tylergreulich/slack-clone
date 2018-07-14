@@ -2,7 +2,7 @@ import * as React from 'react';
 import { extendObservable } from 'mobx';
 import { observer } from 'mobx-react';
 
-import { graphql, ChildMutateProps } from 'react-apollo';
+import { graphql, ChildMutateProps, Query } from 'react-apollo';
 import gql from 'graphql-tag';
 import {
   LoginMutation,
@@ -23,14 +23,7 @@ import { ThemeWrapper } from '../StyledComponents/MuiTheme';
 import { Typography } from '@material-ui/core';
 
 interface LoginProps extends RouteComponentProps<any> {
-  onSessionId?: (sessionId: string) => void;
-  children: (
-    data: {
-      submit: (
-        values: LoginMutationVariables
-      ) => Promise<NormalizedErrorMap | null>;
-    }
-  ) => JSX.Element | null;
+  errors: object;
 }
 
 class Login extends React.Component<
@@ -40,7 +33,8 @@ class Login extends React.Component<
     super(props);
     extendObservable(this, {
       email: '',
-      password: ''
+      password: '',
+      errors: {}
     });
   }
 
@@ -57,16 +51,31 @@ class Login extends React.Component<
         password
       }
     });
-    const { ok, token, refreshToken }: any = response.data.login;
+    const { ok, token, refreshToken, errors }: any = response.data.login;
 
     if (ok) {
       localStorage.setItem('token', token);
       localStorage.setItem('refreshToken', refreshToken);
+      this.props.history.push('/');
+    } else {
+      const err = {};
+      errors.forEach(({ path, message }: any) => {
+        err[`${path}Error`] = message;
+      });
+
+      // this.errors = err;
+      console.log(err);
     }
+
+    console.log(response);
   };
 
   public render() {
-    const { email, password }: any = this;
+    const {
+      email,
+      password,
+      errors: { emailError, passwordError }
+    }: any = this;
     const { token } = localStorage;
 
     return (
@@ -80,14 +89,16 @@ class Login extends React.Component<
               changed={this.onChangeHandler}
               value={email}
               name="email"
-              label="Email"
+              label={emailError ? emailError : 'Email'}
+              error={!!emailError}
             />
             <RegisterInput
               changed={this.onChangeHandler}
               value={password}
               name="password"
               type="password"
-              label="Password"
+              label={passwordError ? passwordError : 'Password'}
+              error={!!passwordError}
             />
           </RegisterForm>
           <RegisterButton
@@ -117,6 +128,6 @@ const loginMutation = gql`
   }
 `;
 
-export default graphql<LoginProps, LoginMutation, LoginMutationVariables>(
+export default graphql<{}, LoginMutation, LoginMutationVariables>(
   loginMutation
 )(observer(Login));

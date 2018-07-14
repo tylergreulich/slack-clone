@@ -1,37 +1,58 @@
+import bcrypt from 'bcrypt';
+
 export default (sequelize, DataTypes) => {
-  const User = sequelize.define('user', {
-    username: {
-      type: DataTypes.STRING,
-      unique: true,
-      validate: {
-        isAlphanumeric: {
+  const User = sequelize.define(
+    'user',
+    {
+      username: {
+        type: DataTypes.STRING,
+        unique: {
           args: true,
-          msg: 'Username can only have letters and numbers'
+          msg: 'Username already exists'
         },
-        len: {
-          args: [3, 25],
-          msg: 'Username must be at least 3 characters'
-        },
-        notEmpty: {
+        validate: {
+          isAlphanumeric: {
+            args: true,
+            msg: 'The username can only contain letters and numbers'
+          },
+          len: {
+            args: [3, 25],
+            msg: 'The username needs to be 3 - 25 characters'
+          }
+        }
+      },
+      email: {
+        type: DataTypes.STRING,
+        unique: {
           args: true,
-          msg: 'Please enter a username'
+          msg: 'Email already exists'
+        },
+        validate: {
+          isEmail: {
+            args: true,
+            msg: 'Invalid email'
+          }
+        }
+      },
+      password: {
+        type: DataTypes.STRING,
+        validate: {
+          len: {
+            args: [5, 100],
+            msg: 'Password must be at least 5 characters long'
+          }
         }
       }
     },
-    email: {
-      type: DataTypes.STRING,
-      unique: true,
-      validate: {
-        isEmail: {
-          args: true,
-          msg: 'Please enter a valid email'
+    {
+      hooks: {
+        afterValidate: async user => {
+          const hashedPassword = await bcrypt.hash(user.password, 12);
+          user.password = hashedPassword;
         }
       }
-    },
-    password: {
-      type: DataTypes.STRING
     }
-  });
+  );
 
   User.associate = models => {
     User.belongsToMany(models.Team, {
