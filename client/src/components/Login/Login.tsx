@@ -34,7 +34,7 @@ class Login extends React.Component<
     extendObservable(this, {
       email: '',
       password: '',
-      errors: {}
+      errorList: {}
     });
   }
 
@@ -46,11 +46,11 @@ class Login extends React.Component<
   public onSubmitHandler = async () => {
     const { email, password }: any = this;
     const response = await this.props.mutate({
-      variables: {
-        email,
-        password
-      }
+      variables: { email, password }
     });
+
+    console.log(response);
+
     const { ok, token, refreshToken, errors }: any = response.data.login;
 
     if (ok) {
@@ -62,19 +62,17 @@ class Login extends React.Component<
       errors.forEach(({ path, message }: any) => {
         err[`${path}Error`] = message;
       });
+      console.log(this);
 
       // this.errors = err;
-      console.log(err);
     }
-
-    console.log(response);
   };
 
   public render() {
     const {
       email,
       password,
-      errors: { emailError, passwordError }
+      errorList: { emailError, passwordError }
     }: any = this;
     const { token } = localStorage;
 
