@@ -23,11 +23,12 @@ class Home extends React.Component<ChildDataProps<QueryData>> {
 
     return (
       <>
-        {loading
+        {/* {loading
           ? null
           : getAllUsers.map((user: User) => (
               <h1 key={user.id}>{user.email}</h1>
-            ))}
+            ))} */}
+        <h1>fuck</h1>
       </>
     );
   }

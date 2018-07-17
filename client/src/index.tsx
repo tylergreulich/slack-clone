@@ -8,6 +8,8 @@ import { createHttpLink } from 'apollo-link-http';
 import { InMemoryCache } from 'apollo-cache-inmemory';
 import './index.css';
 
+import { Provider } from 'react-redux';
+
 export const link = createHttpLink({
   uri: 'http://localhost:8080/graphql'
 });

@@ -23,7 +23,7 @@ import { ThemeWrapper } from '../StyledComponents/MuiTheme';
 import { Typography } from '@material-ui/core';
 
 interface LoginProps extends RouteComponentProps<any> {
-  errors: object;
+  errorList: object;
 }
 
 class Login extends React.Component<
@@ -62,9 +62,8 @@ class Login extends React.Component<
       errors.forEach(({ path, message }: any) => {
         err[`${path}Error`] = message;
       });
-      console.log(this);
 
-      // this.errors = err;
+      console.log(this.errorList);
     }
   };
 
